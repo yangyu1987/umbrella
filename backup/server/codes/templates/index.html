@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static from staticfiles %}
+<script src="{%static 'js/jquery.js'%}"></script>
+    <title>demo</title>
+</head>
+<body>
+
+<div  id="test5"><label><b>post</b> api/project/(\S+)/build 创建egg文件,项目名<input> </label><button >点击测试</button><span ></span></div>
+<div  id="test7"><label><b>post</b> api/client/(\d+)/project/(\S+)/deploy 部署<input id="p1">项目至第<input id="p2">号服务器</label><button >点击测试</button><span ></span></div>
+<script>
+
+
+
+
+
+            $("#test5 button").click(function(){
+  word=$('#test5 input').val();
+                $.ajax({url:"project/"+word+"/build",type:"POST",data:JSON.stringify({"description":"描述","egg":null,"built_at":null}),dataType:'text',success: function(ret){
+                        $('#test5 span').html('返回：'+unescape(ret.replace(/\\u/g, "%u")))
+                    }})
+            });
+
+
+            $("#test7 button").click(function(){
+          c=$('#p2').val();
+
+p=$('#p1').val();
+                $.ajax({url:"client/"+c+"/project/"+p+"/deploy",type:"POST",dataType:'text',success: function(ret){
+                        $('#test7 span').html('返回：'+unescape(ret.replace(/\\u/g, "%u")))
+                    }})
+            });
+
+</script>
+</body>
+</html>
