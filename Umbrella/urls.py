@@ -25,8 +25,8 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 #viewset
 from project.views import ProjectViewSet
-from crawler.views import CrawlerViewSet,CrawlerServerViewSet,CrawlerProjectViewSet
-from crawler.views import CrawlerListView,SpiderListView,SpiderStartView,JobListView,JobLogView
+from crawler.views import CrawlerViewSet,CrawlerServerViewSet,CrawlerProjectViewSet,ServerCpuRamViewSet
+from crawler.views import CrawlerListViewSet,SpiderListViewSet,SpiderStartViewSet,JobListViewSet,JobLogViewSet
 from server.views import ServerViewSet
 
 from rest_framework.routers import DefaultRouter
@@ -37,28 +37,27 @@ router.register(r'project', ProjectViewSet, base_name='project')
 router.register(r'crawler', CrawlerViewSet, base_name='crawler')
 # 服务器模块
 router.register(r'server', ServerViewSet, base_name='server')
+router.register(r'serverCpu', ServerCpuRamViewSet, base_name='serverCpu')
 # 操作模块
 router.register(r'action/server', CrawlerServerViewSet, base_name='actionServer')
 router.register(r'action/project', CrawlerProjectViewSet, base_name='actionProject')
 # 爬虫控制模块
-# router.register(r'operation', CrawlerOperationView, base_name='operation')
+router.register(r'api/crawlerList', CrawlerListViewSet, base_name='crawlerlist')
+router.register(r'api/spiderList', SpiderListViewSet, base_name='spiderList')
+router.register(r'api/spiderStart', SpiderStartViewSet, base_name='spiderStart')
+router.register(r'api/jobList', JobListViewSet, base_name='jobList')
+router.register(r'api/jobLog', JobLogViewSet, base_name='jobLog')
 
-# Project = ProjectViewSet.as_view({
-#     'get': 'list',
-#     'put': 'update',
-#     'patch': 'partial_update',
-#     'delete': 'destroy'
-# })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
     path('doc/', include_docs_urls(title='保护伞')),
-    path('action/crawlerList/', CrawlerListView.as_view(), name='crawlerlist'),
-    path('action/spiderList/', SpiderListView.as_view(), name='spiderList'),
-    path('action/spiderStart/',SpiderStartView.as_view(), name='spiderStart'),
-    path('action/jobList/',JobListView.as_view(), name='JobList'),
-    path('action/jobLog/',JobLogView.as_view(), name='JobLog'),
+    # path('action/crawlerList/', CrawlerListView.as_view(), name='crawlerlist'),
+    # path('action/spiderList/', SpiderListView.as_view(), name='spiderList'),
+    # path('action/spiderStart/',SpiderStartView.as_view(), name='spiderStart'),
+    # path('action/jobList/',JobListView.as_view(), name='JobList'),
+    # path('action/jobLog/',JobLogView.as_view(), name='JobLog'),
     # 自带认证接口
     # url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^login/', obtain_jwt_token),

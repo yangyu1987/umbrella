@@ -1,10 +1,12 @@
 from rest_framework import mixins,viewsets,status
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 
 from .models import Crawler,CrawlerServer,CrawlerProject
 from server.models import Server
 from .serializers import CrawlerSerializer,CrawlerDtSerializer,CrawlerServerSerializer,CrawlerServerDtSerializer,CrawlerProjectSerializer,CrawlerProjectDtSerializer
+from .serializers import CrawlerListSerializer,SpiderListSerializer,SpiderStartSerializer,JobListSerializer,JobLogSerializer
 
 
 from Umbrella.settings import CEAWLER_PROJECTS_FOLDER
@@ -151,138 +153,93 @@ class CrawlerProjectViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins
         return CrawlerProjectSerializer
 
 
-class CrawlerListView(APIView):
+class CrawlerListViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     """
     @指定服务器上的工程列表
     :param Server ID
     """
+    queryset = ''
+    serializer_class = CrawlerListSerializer
 
-    def get(self, request, *args, **kwargs):
-        query_dic = request.query_params
-        serverId = query_dic.get('server')
-        if serverId:
-            client = Server.objects.get(id=serverId)
-            scrapyd = get_scrapyd(client)
-            try:
-                projects = scrapyd.list_projects()
-                return Response(projects,status=status.HTTP_200_OK)
-            except ConnectionError:
-                return Response({'message': 'Connect Error'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Params Error'},status=status.HTTP_200_OK)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
-class SpiderListView(APIView):
+class SpiderListViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     """
     @爬虫列表
     :param Server ID
     :param Project ID
     """
-    def get(self, request, *args, **kwargs):
-        query_dic = request.query_params
-        serverId = query_dic.get('server')
-        projectName = query_dic.get('project')
+    queryset = ''
+    serializer_class = SpiderListSerializer
 
-        if query_dic:
-            client = Server.objects.get(id=serverId)
-            scrapyd = get_scrapyd(client)
-            try:
-                spiders = scrapyd.list_spiders(projectName)
-                spiders = [{'spiderName': spider, 'id': index + 1} for index, spider in enumerate(spiders)]
-                return Response(spiders, status=status.HTTP_200_OK)
-            except ConnectionError:
-                return Response({'message': 'Connect Error'}, status=status.HTTP_200_OK)
-
-        else:
-            return Response({'message': 'Params Error'}, status=status.HTTP_200_OK)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
-class SpiderStartView(APIView):
+class SpiderStartViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     """
     启动爬虫
     :param client_id: client id
     :param project_name: project name
     :param spider_name: spider name
     """
-    def get(self, request, *args, **kwargs):
-        query_dic = request.query_params
-        serverId = query_dic.get('server')
-        projectName = query_dic.get('project')
-        spiderName = query_dic.get('spider')
+    queryset = ''
+    serializer_class = SpiderStartSerializer
 
-        if query_dic:
-            client = Server.objects.get(id=serverId)
-            scrapyd = get_scrapyd(client)
-            try:
-                job = scrapyd.schedule(projectName, spiderName)
-                return Response({'job': job}, status=status.HTTP_200_OK)
-
-            except ConnectionError:
-                return Response({'message': 'Connect Error'}, status=status.HTTP_200_OK)
-
-        else:
-            return Response({'message': 'Params Error'}, status=status.HTTP_200_OK)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
-class JobListView(APIView):
+class JobListViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     """
     任务列表
     :param client_id: client id
     :param project_name: project name
     """
-    def get(self, request, *args, **kwargs):
-        query_dic = request.query_params
-        serverId = query_dic.get('server')
-        projectName = query_dic.get('project')
+    queryset = ''
+    serializer_class = JobListSerializer
 
-        if query_dic:
-            client = Server.objects.get(id=serverId)
-            scrapyd = get_scrapyd(client)
-            try:
-                result = scrapyd.list_jobs(projectName)
-                jobs = []
-                statuses = ['pending', 'running', 'finished']
-                for statu in statuses:
-                    for job in result.get(statu):
-                        job['status'] = statu
-                        jobs.append(job)
-                return Response(jobs)
-            except ConnectionError:
-                return Response({'message': 'Connect Error'},status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Params Error'},status=status.HTTP_200_OK)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
-class JobLogView(APIView):
+class JobLogViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     """
     任务日志
     :param client: client id
     :param project: project name
     :param spider: spider name
-    :param job_name: job id
+    :param job: job id
     """
-    def get(self, request, *args, **kwargs):
-        query_dic = request.query_params
-        serverId = query_dic.get('server')
-        projectName = query_dic.get('project')
-        spiderName = query_dic.get('spider')
-        jobId = query_dic.get('job')
-        if query_dic:
-            client = Server.objects.get(id=serverId)
-            # 获取log地址
-            url = log_url(client.ip, client.port, projectName, spiderName, jobId)
-            try:
-                # get last 1000 bytes of log
-                response = requests.get(url, timeout=5)
-                # Get encoding
-                encoding = response.apparent_encoding
-                # log not found
-                if response.status_code == 404:
-                    return Response({'message': 'Log Not Found'}, status=status.HTTP_200_OK)
-                # bytes to string
-                text = response.content.decode(encoding, errors='replace')
-                return Response(text)
-            except requests.ConnectionError:
-                return Response({'message': 'Load Log Error'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'Params Error'},status=status.HTTP_200_OK)
+    queryset = ''
+    serializer_class = JobLogSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+
+
+class ServerCpuRamViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
+    def list(self, request, *args, **kwargs):
+        return Response({'re':'re'})

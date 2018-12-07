@@ -17,7 +17,7 @@ from shutil import move, copy, rmtree
 from os.path import join, exists, dirname
 from django.utils import timezone
 from Umbrella.settings import CEAWLER_PROJECTS_FOLDER
-import zipfile,os,shutil
+import zipfile,os,shutil,paramiko,time
 
 
 def un_zip(file_name,folder_name):
@@ -52,7 +52,7 @@ BASE = '<base href="{href}">'
 
 
 def get_scrapyd(client):
-    return ScrapydAPI(scrapyd_url(client.ip, client.port))
+    return ScrapydAPI(scrapyd_url(client.ip, client.port),timeout=2)
     # return ScrapydAPI(scrapyd_url(client.ip, client.port), auth=(client.username, client.password))
 
 
@@ -474,3 +474,60 @@ def load_list(x, transformer=None):
         return data
     except:
         return []
+
+
+def cpu(ip, username, password):
+    host_list = ({'ip': ip, 'port': 22, 'username': username, 'password': password},)
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    for host in host_list:
+        ssh.connect(hostname=host['ip'], port=host['port'], username=host['username'], password=host['password'])
+        stdin, stdout, stderr = ssh.exec_command('cat /proc/stat | grep "cpu "')
+        str_out = stdout.read().decode()
+        str_err = stderr.read().decode()
+        if str_err != "":
+            print(str_err)
+            continue
+        else:
+            cpu_time_list = re.findall('\d+', str_out)
+            cpu_idle1 = cpu_time_list[3]
+            total_cpu_time1 = 0
+            for t in cpu_time_list:
+                total_cpu_time1 = total_cpu_time1 + int(t)
+        time.sleep(2)
+        stdin, stdout, stderr = ssh.exec_command('cat /proc/stat | grep "cpu "')
+        str_out = stdout.read().decode()
+        str_err = stderr.read().decode()
+        if str_err != "":
+            print(str_err)
+            continue
+        else:
+            cpu_time_list = re.findall('\d+', str_out)
+            cpu_idle2 = cpu_time_list[3]
+            total_cpu_time2 = 0
+            for t in cpu_time_list:
+                total_cpu_time2 = total_cpu_time2 + int(t)
+
+        cpu_usage = round(1 - (float(cpu_idle2) - float(cpu_idle1)) / (total_cpu_time2 - total_cpu_time1), 2)
+        r_msg = {'cpu': str(cpu_usage)}
+
+        stdin, stdout, stderr = ssh.exec_command('cat /proc/meminfo')
+        str_out = stdout.read().decode()
+        str_err = stderr.read().decode()
+        if str_err != "":
+            print(str_err)
+            continue
+        str_total = re.search('MemTotal:.*?\n', str_out).group()
+        totalmem = re.search('\d+', str_total).group()
+        str_free = re.search('MemFree:.*?\n', str_out).group()
+        freemem = re.search('\d+', str_free).group()
+        use = round(1-float(freemem) / float(totalmem), 2)
+        r_msg['ram'] = str(use)
+        ssh.close()
+
+        return r_msg
+
+
+# c = cpu('192.168.190.122','yang','yang123123')
+# print(c)
