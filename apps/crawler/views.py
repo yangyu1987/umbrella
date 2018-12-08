@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .models import Crawler,CrawlerServer,CrawlerProject
 from server.models import Server
 from .serializers import CrawlerSerializer,CrawlerDtSerializer,CrawlerServerSerializer,CrawlerServerDtSerializer,CrawlerProjectSerializer,CrawlerProjectDtSerializer
-from .serializers import CrawlerListSerializer,SpiderListSerializer,SpiderStartSerializer,JobListSerializer,JobLogSerializer
+from .serializers import CrawlerListSerializer,SpiderListSerializer,SpiderStartSerializer,JobListSerializer,JobLogSerializer,CpuRamSerializer
 
 
 from Umbrella.settings import CEAWLER_PROJECTS_FOLDER
@@ -40,7 +40,7 @@ class CrawlerViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.Crea
         path = os.path.abspath(join(os.getcwd(), CEAWLER_PROJECTS_FOLDER))
         file = instance.file
         if file:
-            # file字段不为空需要
+            # file字段不为空
             # 解压并生成egg
             file_name = str(file).split('/')[-1] # xxx.zip
             crawler_name = str(file).split('/')[-1].split('.')[0] # xxx
@@ -98,6 +98,10 @@ class CrawlerViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.Crea
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class CrawlerBuildViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    pass
 
 
 class CrawlerServerViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -240,6 +244,13 @@ class JobLogViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
-class ServerCpuRamViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
-    def list(self, request, *args, **kwargs):
-        return Response({'re':'re'})
+class ServerCpuRamViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    queryset = ''
+    serializer_class = CpuRamSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)

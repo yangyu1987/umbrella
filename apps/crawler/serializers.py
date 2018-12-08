@@ -6,10 +6,11 @@ from project.serializers import ProjectSerializer
 from server.serializers import ServerSerializer
 
 from server.models import Server
-from utils.common import get_scrapyd,log_url
+from utils.common import get_scrapyd,log_url,cpu
 
 from requests.exceptions import ConnectionError
 import requests
+
 
 class CrawlerSerializer(serializers.ModelSerializer):
     # 格式化时间输出
@@ -298,4 +299,40 @@ class JobLogSerializer(serializers.Serializer):
 
     def validate(self, attrs):  # 全局钩子函数
         attrs["data"] = self.get_jobs_logs(attrs["server"],attrs["crawler"],attrs["spider"],attrs["job"])
+        return attrs
+
+
+class CpuRamSerializer(serializers.Serializer):
+    server = serializers.CharField(max_length=10, label='服务器ID', required=True, allow_blank=False, error_messages={
+        "blank": "请传入服务器ID",
+        "required": "请传入服务器ID",
+    }, write_only=True)
+    data = serializers.DictField(read_only=True)
+
+    def get_cpu_ram(self,server):
+        client = Server.objects.get(id=server)
+        userName = client.userName
+        passWord = client.passWord
+        ip = client.ip
+        # 获取服务器CPU内存信息
+        try:
+            # get last 1000 bytes of log
+            cpuRam = cpu(ip, userName, passWord)
+            res = {
+                "code": '1',
+                "message": '请求成功',
+                "result": cpuRam
+            }
+            return res
+
+        except requests.ConnectionError:
+            res = {
+                "code": '0',
+                "message": '服务器响应超时',
+                "result": {}
+            }
+            return res
+
+    def validate(self, attrs):  # 全局钩子函数
+        attrs["data"] = self.get_cpu_ram(attrs["server"])
         return attrs

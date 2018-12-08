@@ -509,8 +509,9 @@ def cpu(ip, username, password):
             for t in cpu_time_list:
                 total_cpu_time2 = total_cpu_time2 + int(t)
 
-        cpu_usage = round(1 - (float(cpu_idle2) - float(cpu_idle1)) / (total_cpu_time2 - total_cpu_time1), 2)
-        r_msg = {'cpu': str(cpu_usage)}
+        cpu_usage = 1 - (float(cpu_idle2) - float(cpu_idle1)) / (total_cpu_time2 - total_cpu_time1)
+        cpu_usage = '{:.0%}'.format(cpu_usage)
+        r_msg = {'cpu': cpu_usage}
 
         stdin, stdout, stderr = ssh.exec_command('cat /proc/meminfo')
         str_out = stdout.read().decode()
@@ -522,12 +523,12 @@ def cpu(ip, username, password):
         totalmem = re.search('\d+', str_total).group()
         str_free = re.search('MemFree:.*?\n', str_out).group()
         freemem = re.search('\d+', str_free).group()
-        use = round(1-float(freemem) / float(totalmem), 2)
-        r_msg['ram'] = str(use)
+        use = 1-float(freemem) / float(totalmem)
+        r_msg['ram'] = '{:.0%}'.format(use)
         ssh.close()
 
         return r_msg
 
 
-# c = cpu('192.168.190.122','yang','yang123123')
-# print(c)
+c = cpu('192.168.190.122','yang','yang123123')
+print(c)

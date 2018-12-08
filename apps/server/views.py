@@ -18,7 +18,7 @@ class ServerPagination(PageNumberPagination):
     page_query_param = 'page'
 
 
-class ServerViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
+class ServerViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.RetrieveModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
     queryset = Server.objects.all()
     serializer_class = ServerSerializer
     pagination_class = ServerPagination

@@ -13,6 +13,14 @@ class ServerSerializer(serializers.ModelSerializer):
                                  validators=[
                                      UniqueValidator(queryset=Server.objects.all(), message="服务器已存在")]
                                  )
+    userName = serializers.CharField(max_length=100, label='登陆名', required=True, allow_blank=False, error_messages={
+        "blank": "请传入登陆名",
+        "required": "请传入登陆名",
+    })
+    passWord = serializers.CharField(max_length=100, label='密码', required=True, allow_blank=False, error_messages={
+        "blank": "请传入密码",
+        "required": "请传入密码",
+    }, write_only=True)
 
     # def create(self, validated_data):
     #     pass

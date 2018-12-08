@@ -32,12 +32,12 @@ from server.views import ServerViewSet
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 # 项目模块
-router.register(r'project', ProjectViewSet, base_name='project')
+router.register(r'api/project', ProjectViewSet, base_name='project')
 # 爬虫模块
-router.register(r'crawler', CrawlerViewSet, base_name='crawler')
+router.register(r'api/crawler', CrawlerViewSet, base_name='crawler')
 # 服务器模块
-router.register(r'server', ServerViewSet, base_name='server')
-router.register(r'serverCpu', ServerCpuRamViewSet, base_name='serverCpu')
+router.register(r'api/server', ServerViewSet, base_name='server')
+router.register(r'api/serverCpu', ServerCpuRamViewSet, base_name='serverCpu')
 # 操作模块
 router.register(r'action/server', CrawlerServerViewSet, base_name='actionServer')
 router.register(r'action/project', CrawlerProjectViewSet, base_name='actionProject')
