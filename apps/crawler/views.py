@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .models import Crawler,CrawlerServer,CrawlerProject
 from server.models import Server
 from .serializers import CrawlerSerializer,CrawlerDtSerializer,CrawlerServerSerializer,CrawlerServerDtSerializer,CrawlerProjectSerializer,CrawlerProjectDtSerializer
-from .serializers import CrawlerListSerializer,SpiderListSerializer,SpiderStartSerializer,JobListSerializer,JobLogSerializer,CpuRamSerializer
+from .serializers import CrawlerListSerializer,SpiderListSerializer,SpiderStartSerializer,JobListSerializer,JobLogSerializer,CrawlerBuildSerializer
 
 
 from Umbrella.settings import CEAWLER_PROJECTS_FOLDER
@@ -33,64 +33,41 @@ class CrawlerViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.Crea
             return CrawlerDtSerializer
         return CrawlerSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        # 获取工程总目录
-        path = os.path.abspath(join(os.getcwd(), CEAWLER_PROJECTS_FOLDER))
-        file = instance.file
-        if file:
-            # file字段不为空
-            # 解压并生成egg
-            file_name = str(file).split('/')[-1] # xxx.zip
-            crawler_name = str(file).split('/')[-1].split('.')[0] # xxx
-            crawler_zip_path = join(path, file_name) # d://ds/ds/xxx.zip
-            crawler_path = join(path, crawler_name) # d://ds/ds/xxx
-            un_zip(crawler_zip_path,crawler_path)
-            # 生成egg文件
-            build_project(crawler_name)
-            egg = find_egg(crawler_path)
-            if not egg:
-                # 失败 回退 删除文件夹
-                if os.path.isdir(crawler_path):
-                    shutil.rmtree(crawler_path)
-                return Response({'message': 'egg not found'}, status=status.HTTP_201_CREATED)
-
-            # 成功，删除压缩文件 更新字段
-            os.remove(crawler_zip_path)
-            instance.file = None
-            instance.egg = egg
-            instance.crawlerName = crawler_name
-            instance.built_at = datetime.now()
-            instance.save()
-
-            return Response(serializer.data,status.HTTP_200_OK)
-
-        # 操作
-        if request.data.get('action'):
-            data = {
-                'action': request.data
-            }
-            return Response(data)
-
-        return Response(serializer.data)
-
     def create(self, request, *args, **kwargs):
         type = request.data['type']
-        # 上传爬虫
+        path = os.path.abspath(join(os.getcwd(), CEAWLER_PROJECTS_FOLDER))
+        # 上传爬虫 并解压文件
         if type == '2':
             try:
-                # file_name = request.data['file'].name
+                request.data['crawlerName'] = str(request.data['file'].name).split('.')[0]
                 serializer = self.get_serializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
+                # 建表
                 self.perform_create(serializer)
+                # 解压
+                file_name = request.data['file'].name  # xxx.zip
+                crawlerName = str(file_name).split('.')[0]  # xxx
+                crawler_zip_path = join(path, file_name)  # d://ds/ds/xxx.zip
+                crawler_path = join(path, crawlerName)  # d://ds/ds/xxx
+                un_zip(crawler_zip_path, crawler_path)
+                # 删除压缩文件
+                os.remove(crawler_zip_path)
                 headers = self.get_success_headers(serializer.data)
                 return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
             except Exception as e:
-                err = {
-                    'error': '没找到文件'
-                }
+                try:
+                    # 数据库冲突
+                    file_name = request.data['file'].name  # xxx.zip
+                    crawler_zip_path = join(path, file_name)  # d://ds/ds/xxx.zip
+                    os.remove(crawler_zip_path)
+                    err = {
+                        'error': '爬虫已存在'
+                    }
+                except Exception as e:
+                    err = {
+                        'error': '没找到上传文件'
+                    }
                 return Response(err, status=status.HTTP_201_CREATED)
 
         serializer = self.get_serializer(data=request.data)
@@ -100,13 +77,27 @@ class CrawlerViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.Crea
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class CrawlerBuildViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    pass
+class CrawlerBuildViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+   @打包成EGG文件
+   :param crawler name
+   """
+    queryset = ''
+    serializer_class = CrawlerBuildSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
 
 
 class CrawlerServerViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    部署服务器
+    @ 部署服务器
+    :param crawler: client id
+    :param server: server id
     """
     queryset = CrawlerServer.objects.all()
     # serializer_class = CrawlerServerSerializer
@@ -235,18 +226,6 @@ class JobLogViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
     """
     queryset = ''
     serializer_class = JobLogSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        # self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
-
-
-class ServerCpuRamViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
-    queryset = ''
-    serializer_class = CpuRamSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

@@ -529,6 +529,6 @@ def cpu(ip, username, password):
 
         return r_msg
 
-
-c = cpu('192.168.190.122','yang','yang123123')
-print(c)
+#
+# c = cpu('192.168.190.122','yang','yang123123')
+# print(c)

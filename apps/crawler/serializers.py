@@ -9,7 +9,12 @@ from server.models import Server
 from utils.common import get_scrapyd,log_url,cpu
 
 from requests.exceptions import ConnectionError
-import requests
+import requests,os
+from os.path import join
+
+from utils.build import build_project,find_egg
+from datetime import datetime
+from Umbrella.settings import CEAWLER_PROJECTS_FOLDER
 
 
 class CrawlerSerializer(serializers.ModelSerializer):
@@ -18,6 +23,7 @@ class CrawlerSerializer(serializers.ModelSerializer):
     built_at = serializers.DateTimeField(format="%Y-%m-%d", read_only=True, default='')
     generated_at = serializers.DateTimeField(format="%Y-%m-%d", read_only=True, default='')
     egg = serializers.CharField(read_only=True, default='')
+    crawlerName = serializers.CharField(max_length=100,allow_blank=True,allow_null=True,label='爬虫工程名')
 
     class Meta:
         model = Crawler
@@ -302,37 +308,43 @@ class JobLogSerializer(serializers.Serializer):
         return attrs
 
 
-class CpuRamSerializer(serializers.Serializer):
-    server = serializers.CharField(max_length=10, label='服务器ID', required=True, allow_blank=False, error_messages={
-        "blank": "请传入服务器ID",
-        "required": "请传入服务器ID",
-    }, write_only=True)
+class CrawlerBuildSerializer(serializers.Serializer):
+    crawlerName = serializers.CharField(max_length=100, label='爬虫工程名',required=True,allow_blank=False,error_messages={
+        "blank": "请传入爬虫工程名",
+        "required": "请传入爬虫工程名",
+    },write_only=True)
     data = serializers.DictField(read_only=True)
 
-    def get_cpu_ram(self,server):
-        client = Server.objects.get(id=server)
-        userName = client.userName
-        passWord = client.passWord
-        ip = client.ip
-        # 获取服务器CPU内存信息
-        try:
-            # get last 1000 bytes of log
-            cpuRam = cpu(ip, userName, passWord)
-            res = {
-                "code": '1',
-                "message": '请求成功',
-                "result": cpuRam
-            }
-            return res
-
-        except requests.ConnectionError:
+    def crawler_build(self, crawlerName):
+        crawler = Crawler.objects.get(crawlerName=crawlerName)
+        path = os.path.abspath(join(os.getcwd(), CEAWLER_PROJECTS_FOLDER))
+        crawler_path = join(path, crawlerName)
+        build_project(crawlerName)
+        egg = find_egg(crawler_path)
+        if not egg:
+            # 失败
             res = {
                 "code": '0',
-                "message": '服务器响应超时',
+                "message": '生成EGG失败',
                 "result": {}
+            }
+            return res
+        else:
+            # 更新数据库
+            crawler.file = None
+            crawler.egg = egg
+            crawler.built_at = datetime.now()
+            crawler.save()
+
+            res = {
+                "code": '1',
+                "message": '构建成功',
+                "result": {
+                    'egg': egg
+                }
             }
             return res
 
     def validate(self, attrs):  # 全局钩子函数
-        attrs["data"] = self.get_cpu_ram(attrs["server"])
+        attrs["data"] = self.crawler_build(attrs["crawlerName"])
         return attrs

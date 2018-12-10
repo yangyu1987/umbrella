@@ -1,3 +1,0 @@
-BasePro
-scrapy_redis_bloom
-scrapy_redis_bloomfilter

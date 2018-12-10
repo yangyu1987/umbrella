@@ -1,0 +1,12 @@
+CREATE TABLE `moji_area_weather` (
+  `area_url` varchar(255) primary key comment '地区天气url',
+  `temperature` varchar(255) DEFAULT NULL comment '当前温度',
+  `weather` varchar(255) DEFAULT NULL comment '当前天气',
+  `humidity` varchar(255) DEFAULT NULL comment '湿度',
+  `wind_direction` varchar(255) DEFAULT NULL comment '风向',
+  `highest_temperature` varchar(255) DEFAULT NULL comment '最高温度',
+  `daytime_weather` varchar(255) DEFAULT NULL comment '白天天气',
+  `lowest_temperature` varchar(255) DEFAULT NULL comment '最低天气',
+  `night_weather` varchar(255) DEFAULT NULL comment '晚上天气',
+  `crawl_time` bigint(20) DEFAULT NULL comment '获取时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

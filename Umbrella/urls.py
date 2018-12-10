@@ -25,9 +25,9 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 #viewset
 from project.views import ProjectViewSet
-from crawler.views import CrawlerViewSet,CrawlerServerViewSet,CrawlerProjectViewSet,ServerCpuRamViewSet
+from crawler.views import CrawlerViewSet,CrawlerBuildViewSet,CrawlerServerViewSet,CrawlerProjectViewSet
 from crawler.views import CrawlerListViewSet,SpiderListViewSet,SpiderStartViewSet,JobListViewSet,JobLogViewSet
-from server.views import ServerViewSet
+from server.views import ServerViewSet,ServerCpuRamViewSet,ServerStatusViewSet
 
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
@@ -35,9 +35,11 @@ router = DefaultRouter()
 router.register(r'api/project', ProjectViewSet, base_name='project')
 # 爬虫模块
 router.register(r'api/crawler', CrawlerViewSet, base_name='crawler')
+router.register(r'api/crawlerBuild', CrawlerBuildViewSet, base_name='crawlerBuild')
 # 服务器模块
 router.register(r'api/server', ServerViewSet, base_name='server')
 router.register(r'api/serverCpu', ServerCpuRamViewSet, base_name='serverCpu')
+router.register(r'api/serverStatus', ServerStatusViewSet, base_name='serverStatus')
 # 操作模块
 router.register(r'action/server', CrawlerServerViewSet, base_name='actionServer')
 router.register(r'action/project', CrawlerProjectViewSet, base_name='actionProject')

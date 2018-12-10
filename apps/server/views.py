@@ -6,7 +6,7 @@ from rest_framework.filters import SearchFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import ServerSerializer
+from .serializers import ServerSerializer,ServerStatusSerializer,CpuRamSerializer
 from .models import Server
 from .filters import ServerFilter
 
@@ -26,3 +26,35 @@ class ServerViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.Retriev
     filter_class = ServerFilter
     # filter_backends = (DjangoFilterBackend, SearchFilter)
     # search_fields = ('name', 'owner', 'detail')
+
+
+class ServerStatusViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    """
+   服务器状态
+   :param client_id: client id
+   """
+    queryset = ''
+    serializer_class = ServerStatusSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+
+
+class ServerCpuRamViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    """
+   服务器CPU RAM 信息
+   :param client_id: client id
+   """
+    queryset = ''
+    serializer_class = CpuRamSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
