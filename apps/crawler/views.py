@@ -136,7 +136,7 @@ class CrawlerServerViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixin
         return Response(serializer.data, status=status.HTTP_201_CREATED,headers=headers)
 
 
-class CrawlerProjectViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+class CrawlerProjectViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.RetrieveModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
     """
     项目归属
     """

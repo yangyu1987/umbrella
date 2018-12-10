@@ -31,7 +31,7 @@
           <entry key="config" value="1" />
           <entry key="createtable" value="1" />
           <entry key="json" value="1" />
-          <entry key="py" value="186" />
+          <entry key="py" value="188" />
           <entry key="sql" value="2" />
         </counts>
       </usages-collector>
@@ -39,14 +39,14 @@
         <counts>
           <entry key="JSON" value="1" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="186" />
+          <entry key="Python" value="188" />
           <entry key="SQL" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Django Console" value="70" />
-          <entry key="py" value="6913" />
+          <entry key="py" value="6921" />
           <entry key="py@Umbrella" value="592" />
         </counts>
       </usages-collector>
@@ -54,13 +54,25 @@
         <counts>
           <entry key="CommandLine" value="432" />
           <entry key="PLAIN_TEXT" value="160" />
-          <entry key="Python" value="6983" />
+          <entry key="Python" value="6991" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/apps/crawler/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="142" column="43" lean-forward="true" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backup/server/codes/views.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -70,7 +82,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/server/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="437">
@@ -89,6 +101,18 @@
               <caret line="28" selection-start-line="28" selection-end-line="28" />
               <folding>
                 <marker date="1544242997186" expanded="true" signature="456:569" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/apps/project/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="322">
+              <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
+              <folding>
+                <marker date="1543909529824" expanded="false" signature="0:6" ph="import ..." />
               </folding>
             </state>
           </provider>
@@ -144,35 +168,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/crawler/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
+            <state relative-caret-position="66">
               <caret line="12" column="105" selection-start-line="12" selection-start-column="62" selection-end-line="12" selection-end-column="105" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Umbrella/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="39" column="27" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="27" />
-              <folding>
-                <element signature="e#632#664#0" expanded="true" />
-                <marker date="1544428436366" expanded="true" signature="3013:3016" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/common.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="531" selection-start-line="531" selection-end-line="534" />
-              <folding>
-                <element signature="e#62#76#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -233,12 +232,12 @@
         <option value="$PROJECT_DIR$/backup/MxShop/apps/scrapyd/views.py" />
         <option value="$PROJECT_DIR$/backup/server/codes/views.py" />
         <option value="$PROJECT_DIR$/apps/crawler/serializers.py" />
-        <option value="$PROJECT_DIR$/apps/crawler/views.py" />
         <option value="$PROJECT_DIR$/apps/server/views.py" />
         <option value="$PROJECT_DIR$/utils/common.py" />
         <option value="$PROJECT_DIR$/Umbrella/urls.py" />
         <option value="$PROJECT_DIR$/apps/server/models.py" />
         <option value="$PROJECT_DIR$/apps/server/serializers.py" />
+        <option value="$PROJECT_DIR$/apps/crawler/views.py" />
       </list>
     </option>
   </component>
@@ -511,16 +510,6 @@
     <entry file="file://$PROJECT_DIR$/cmd/init.py" />
     <entry file="file://$PROJECT_DIR$/utils/config.py" />
     <entry file="file://$PROJECT_DIR$/../../virtualenv/django-rest-api/Lib/shutil.py" />
-    <entry file="file://$PROJECT_DIR$/apps/project/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
-          <folding>
-            <marker date="1543909529824" expanded="false" signature="0:6" ph="import ..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/media/projects/BaseProSlave/BasePro/spiders/atbredis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="477">
@@ -727,17 +716,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/crawler/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" column="125" selection-start-line="8" selection-start-column="125" selection-end-line="8" selection-end-column="125" />
-          <folding>
-            <marker date="1544427852784" expanded="true" signature="3520:3820" ph="..." />
-            <marker date="1544427852784" expanded="true" signature="7471:8661" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backup/server/codes/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
@@ -776,23 +754,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/project/serializers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/crawler/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="12" column="105" selection-start-line="12" selection-start-column="62" selection-end-line="12" selection-end-column="105" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/crawler/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -800,16 +761,6 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
             <marker date="1544427794627" expanded="true" signature="3268:3865" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/project/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
-          <folding>
-            <marker date="1544242997186" expanded="true" signature="456:569" ph="..." />
           </folding>
         </state>
       </provider>
@@ -841,6 +792,53 @@
           <caret line="43" column="38" lean-forward="true" selection-start-line="43" selection-start-column="38" selection-end-line="43" selection-end-column="38" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/project/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/project/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
+          <folding>
+            <marker date="1544242997186" expanded="true" signature="456:569" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/project/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
+          <folding>
+            <marker date="1543909529824" expanded="false" signature="0:6" ph="import ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/crawler/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="12" column="105" selection-start-line="12" selection-start-column="62" selection-end-line="12" selection-end-column="105" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/crawler/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="142" column="43" lean-forward="true" selection-start-line="142" selection-start-column="43" selection-end-line="142" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>
